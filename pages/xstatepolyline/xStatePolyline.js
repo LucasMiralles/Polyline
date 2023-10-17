@@ -21,6 +21,46 @@ const polylineMachine = createMachine(
         initial: "idle",
         states : {
             idle: {
+                on: {
+                    MOUSECLICK: {
+                        target: "DRAWING",
+                        actions: "createLine"
+                    }
+                }
+            },
+            DRAWING: {
+                on: {
+                    MOUSECLICK: {
+                        target: "DRAWING",
+                        actions: "addPoint",
+                        internal: true,
+                        cond: "pasPlein"
+                    },
+
+                    MOUSEMOVE: {
+                        target: "DRAWING",
+                        internal: true,
+                        actions: "setLastPoint"
+                    },
+
+                    Escape: {
+                        target: "idle",
+                        actions: "abandon"
+                    },
+
+                    Enter: {
+                        target: "idle",
+                        actions: "saveLine",
+                        cond: "pasPlein"
+                    },
+
+                    Backspace: {
+                        target: "DRAWING",
+                        actions: "removeLastPoint",
+                        internal: true,
+                        cond: "plusDeDeuxPoints"
+                    }
+                }
             }
         }
     },
